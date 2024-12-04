@@ -12,7 +12,7 @@ Some of the R code used to create this work was adapted from Alexander (2023).
 The repo is structured as:
 - `data/00-simulated_data/simulated_data1.csv` contains the simulated data for testing purpose.
 - `data/01-raw_data/raw_data` contains raw data used in this investigation.
-- data/02-analysis_data/cleaned_data` contains cleaned data used in this investigation.
+- `data/02-analysis_data/cleaned_data` contains cleaned data used in this investigation.
 - `other`  contains copies of LLM conversations along with sketches of the dataset and graphs featured in this report..
 - `Paper` contains  a PDF version of the final paper, the Quarto file used to generate the PDF, and a file with the paper's references.
 - `scripts` contains R scripts for data simulation, downloading, cleaning,testing, EDA and model.
