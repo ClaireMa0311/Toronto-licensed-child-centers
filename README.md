@@ -14,8 +14,9 @@ The repo is structured as:
 - `data/01-raw_data/raw_data` contains raw data used in this investigation.
 - `data/02-analysis_data/cleaned_data` contains cleaned data used in this investigation.
 - `other`  contains copies of LLM conversations along with sketches of the dataset and graphs featured in this report..
-- `Paper` contains  a PDF version of the final paper, the Quarto file used to generate the PDF, and a file with the paper's references.
+- `Paper` contains the Quarto file used to generate the PDF, and a file with the paper's references. Since there is rendering problem paper.pdf is lacted outside of this folder.
 - `scripts` contains R scripts for data simulation, downloading, cleaning,testing, EDA and model.
+- 'Paper.pdf' paper output.
 
 
 ## Statement on LLM usage
