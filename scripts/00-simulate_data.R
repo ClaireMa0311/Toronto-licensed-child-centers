@@ -7,12 +7,9 @@
 # Pre-requisites: The `dplyr` package must be installed and loaded
 # Any other information needed? Make sure you are in the `starter_folder` rproj
 
-
 #### Workspace setup ####
-
 # Load necessary library
 library(dplyr)
-
 
 #### Simulate data ####
 
@@ -47,9 +44,5 @@ simulated_data <- data.frame(
 # Display first few rows of the simulated dataset
 head(simulated_data)
 
-
-
-
-
 #### Save data ####
-write_csv(simulated_data, "../data/00-simulated_data/simulated_data1.csv")
+write_csv(simulated_data, "data/00-simulated_data/simulated_data.csv")

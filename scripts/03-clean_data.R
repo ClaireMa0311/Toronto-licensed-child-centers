@@ -4,15 +4,16 @@
 # Date: 25 November 2024 
 # Contact: minglu.ma@mail.utoronto.ca 
 # License: MIT
-# Pre-requisites: The `dplyr` and 'readr' packages must be installed and loaded
+# Pre-requisites: The `dplyr`, `arrow`, and 'readr' packages must be installed and loaded
 # Any other information needed? Make sure you are in the `starter_folder` rproj
 
 #### Workspace setup ####
 library(dplyr)
 library(readr)
-#### Clean data ####
-data <- read.csv("../data/01-raw_data/raw_data.csv")
+library(arrow)
 
+#### Clean data ####
+data <- read.csv("data/01-raw_data/raw_data.csv")
 
 # Relevant columns
 relevant_columns <- c("ward", "AUSPICE", "bldg_type", "cwelcc_flag", "TOTSPACE", "subsidy")
@@ -39,4 +40,4 @@ cleaned_data <- data %>%
   )
 
 #### Save data ####
-write_csv(cleaned_data, "../data/02-analysis_data/cleaned_data.csv")
+write_parquet(cleaned_data, "data/02-analysis_data/analysis_data.parquet")

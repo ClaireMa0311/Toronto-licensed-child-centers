@@ -7,15 +7,16 @@
 # Pre-requisites: The `dplyr`,'readr', 'ggplot2', 'reshape' and 'gridExtra'packages must be installed and loaded
 # Any other information needed? Make sure you are in the `starter_folder` rproj
 
-
 #### Workspace setup ####
 library(dplyr)
 library(readr)
 library(ggplot2)
 library(reshape2)
 library(gridExtra)
+library(arrow)
+
 #### Read data ####
-data <- read_csv("../data/02-analysis_data/cleaned_data.csv")
+data <- read_parquet("data/02-analysis_data/analysis_data.parquet")
 
 ### EDA ####
 head(data)
@@ -66,6 +67,7 @@ plot4 <- ggplot(data, aes(x = reorder(bldg_type, -table(bldg_type)[bldg_type])))
   theme_minimal() +
   theme(axis.text.y = element_text(size = 5),
         plot.title = element_text(size = 8))  # Reduce title text size
+
 # 5. Distribution of Ward (Bar Plot)
 # Create a bar plot for ward variable
 plot5 <-ggplot(data, aes(x = ward)) +
@@ -80,7 +82,7 @@ plot5 <-ggplot(data, aes(x = ward)) +
     axis.text.x = element_text(size = 8),  # Rotate x-axis labels for readability
     plot.title = element_text(size = 8)
   )
+
 # Increase plot area and use grid.arrange
 combined_plot <- grid.arrange(plot1, plot2, plot3, plot4, plot5, ncol = 2)
-
 
