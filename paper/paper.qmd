@@ -3,7 +3,7 @@ title: "Understanding Subsidy Allocation in Toronto’s Child Care Centres: Insi
 subtitle: "Non-Profit Governance, Program Participation, and Capacity Drive Funding Decisions"
 author: 
   - Claire Ma
-thanks: "Code and data are available at: [https://github.com/ClaireMa0311/Toronto-licensed-child-centers.git]."
+thanks: "Code and data are available at: [https://github.com/ClaireMa0311/Toronto-licensed-child-centers](https://github.com/ClaireMa0311/Toronto-licensed-child-centers)"
 date: today
 date-format: long
 abstract: "This study examines the factors influencing government subsidy allocation to licensed child care centres in Toronto based on Licened child Care Centers from Open Data Toronto. By employing a logistic regression model, we found that non-profit governance, participation in the Canada-Wide Early Learning and Child Care (CWELCC) program, and larger capacity significantly increase a centre's likelihood of receiving subsidies. These findings highlight how funding priorities align with public goals to expand access to high-quality child care, especially for vulnerable populations. By uncovering patterns in subsidy distribution, this research provides critical insights for policymakers to ensure more equitable and effective resource allocation."
