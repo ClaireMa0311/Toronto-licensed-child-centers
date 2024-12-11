@@ -1,7 +1,7 @@
 #### Preamble ####
 # Purpose: Models
 # Author: Minglu Ma
-# Date: 28 November 2024 
+# Date: 28 November 2024
 # Contact: minglu.ma@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: The `caret`, `arrow`, `modelsummary` and 'ggplot2' package must be installed and loaded
@@ -31,18 +31,22 @@ summary(full_model)
 
 # Stepwise selection based on AIC
 step_model_aic <- step(full_model, direction = "both", trace = TRUE)
-summary(step_model_aic)  # AIC-based selected model
+summary(step_model_aic) # AIC-based selected model
 
 # Refit model by removing non-significant variables to obtain the reduced model
-reduced_model <- glm(formula = subsidy ~ AUSPICE + cwelcc_flag + TOTSPACE, 
-                       family = binomial, data = train_data)
+reduced_model <- glm(
+  formula = subsidy ~ AUSPICE + cwelcc_flag + TOTSPACE,
+  family = binomial, data = train_data
+)
 summary(reduced_model)
 
 # Create a binary variable for "Non Profit Agency"
 train_data$AUSPICE_NonProfit <- ifelse(train_data$AUSPICE == "Non Profit Agency", 1, 0)
 # Fit a simplified model with the binary variable for AUSPICE
-simplified_model <- glm(formula = subsidy ~ AUSPICE_NonProfit + bldg_type + cwelcc_flag + TOTSPACE, 
-                      family = binomial, data = train_data)
+simplified_model <- glm(
+  formula = subsidy ~ AUSPICE_NonProfit + bldg_type + cwelcc_flag + TOTSPACE,
+  family = binomial, data = train_data
+)
 summary(simplified_model)
 
 # Create a coefficient table of all models
@@ -56,21 +60,35 @@ model_list <- list(
 # Customize the table to display only AIC and Deviance
 modelsummary(
   model_list,
-  gof_map = c("AIC", "Deviance")  # Include only AIC and Deviance in the table
+  gof_map = c("AIC", "Deviance") # Include only AIC and Deviance in the table
 )
 
 # Fit models to full analysis data
+# Rename varaible names to beautify model output
+data <- data %>%
+  mutate(AUSPICE_NonProfit = ifelse(AUSPICE == "Non Profit Agency", 1, 0)) %>%
+  rename(
+    Ward = ward,
+    Operating_Auspice = AUSPICE,
+    Building_Type = bldg_type,
+    CWELCC_Participation = cwelcc_flag,
+    Total_Space = TOTSPACE
+  )
 full_model <- glm(subsidy ~ ., data = data, family = binomial)
 step_model_aic <- step(full_model, direction = "both", trace = TRUE)
-reduced_model <- glm(formula = subsidy ~ AUSPICE + cwelcc_flag + TOTSPACE, 
-                     family = binomial, data = data)
-simplified_model <- glm(formula = subsidy ~ AUSPICE_NonProfit + bldg_type + cwelcc_flag + TOTSPACE, 
-                        family = binomial, data = data %>% mutate(AUSPICE_NonProfit=ifelse(AUSPICE == "Non Profit Agency", 1, 0)))
+reduced_model <- glm(
+  formula = subsidy ~ Operating_Auspice + CWELCC_Participation + Total_Space,
+  family = binomial, data = data
+)
+simplified_model <- glm(
+  formula = subsidy ~ Operating_Auspice + Building_Type + CWELCC_Participation + Total_Space,
+  family = binomial, data = data
+)
 # Save models
-saveRDS(full_model, file="models/full_model.rds")
-saveRDS(step_model_aic, file="models/Stepwise_AIC_model.rds")
-saveRDS(reduced_model, file="models/final_model.rds")
-saveRDS(simplified_model, file="models/simplified_model.rds")
+saveRDS(full_model, file = "models/full_model.rds")
+saveRDS(step_model_aic, file = "models/Stepwise_AIC_model.rds")
+saveRDS(reduced_model, file = "models/final_model.rds")
+saveRDS(simplified_model, file = "models/simplified_model.rds")
 
 # Calculate log-likelihood of the reduced (final) model
 log_likelihood_fitted <- logLik(reduced_model)

@@ -4,9 +4,9 @@
 # Date: 25 November 2024
 # Contact: minglu.ma@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: 
-  # - The `tidyverse` and `testthat` packages must be installed and loaded
-  # - 00-simulate_data.R must have been run
+# Pre-requisites:
+# - The `tidyverse` and `testthat` packages must be installed and loaded
+# - 00-simulate_data.R must have been run
 # Any other information needed? Make sure you are in the `starter_folder` rproj
 
 

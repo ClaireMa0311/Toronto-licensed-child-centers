@@ -1,8 +1,8 @@
 #### Preamble ####
-# Purpose: Cleans the raw data 
+# Purpose: Cleans the raw data
 # Author: Claire Ma
-# Date: 25 November 2024 
-# Contact: minglu.ma@mail.utoronto.ca 
+# Date: 25 November 2024
+# Contact: minglu.ma@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: The `dplyr`, `arrow`, and 'readr' packages must be installed and loaded
 # Any other information needed? Make sure you are in the `starter_folder` rproj
@@ -25,8 +25,10 @@ cleaned_data <- data %>%
   mutate(
     # Collapse sparse levels in bldg_type
     bldg_type = case_when(
-      bldg_type %in% c("Public Elementary (French)", "Community/Rec Centre - Private", 
-                       "Community/Rec Centre AOCC", "Multi Human Services Facility") ~ "Other",
+      bldg_type %in% c(
+        "Public Elementary (French)", "Community/Rec Centre - Private",
+        "Community/Rec Centre AOCC", "Multi Human Services Facility"
+      ) ~ "Other",
       TRUE ~ bldg_type
     ),
     # Collapse sparse levels in AUSPICE
@@ -35,8 +37,8 @@ cleaned_data <- data %>%
       TRUE ~ AUSPICE
     ),
     # Convert binary flags to numeric
-    cwelcc_flag = ifelse(cwelcc_flag == "Y", 1, 0),  # Convert to numeric 0/1
-    subsidy = ifelse(subsidy == "Y", 1, 0)           # Ensure numeric 0/1 encoding for subsidy
+    cwelcc_flag = ifelse(cwelcc_flag == "Y", 1, 0), # Convert to numeric 0/1
+    subsidy = ifelse(subsidy == "Y", 1, 0) # Ensure numeric 0/1 encoding for subsidy
   )
 
 #### Save data ####

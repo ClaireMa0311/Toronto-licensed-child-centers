@@ -4,7 +4,7 @@
 # Date: 25 November 2024
 # Contact: minglu.ma@mail.utoronto.ca
 # License: MIT
-# Pre-requisites: 
+# Pre-requisites:
 # - The `arrow` and `testthat` packages must be installed and loaded
 # - 03-clean_data.R must have been run
 # Any other information needed? Make sure you are in the `starter_folder` rproj
@@ -44,5 +44,3 @@ test_that("All values in 'subsidy' are either 0 or 1", {
 test_that("All values in 'cwelcc_flag' are either 0 or 1", {
   expect_true(all(data$cwelcc_flag %in% c(0, 1)))
 })
-
-

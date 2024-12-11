@@ -59,7 +59,7 @@ The remainder of this paper is structured as follows. @sec-data describes the da
 The dataset used in this study was sourced from the [@citeopendatatoronto; @toronto2024licensed] made publicly available by the City of Toronto. This original raw dataset provides detailed information about licensed child care centres, including 20 variables capturing aspects of their location, operating auspice (e.g., non-profit, public, or commercial), space usage, building type, participation in government programs such as the Canada-Wide Early Learning and Child Care (CWELCC) system, and other operational details. These data offer valuable insights into the factors influencing subsidy allocation, a key policy tool for improving access to early childhood education and care. By translating real-world phenomena into structured data entries, this dataset enables a comprehensive exploration of equity and efficiency in child care funding. Detailed data collection analysis is in the Appendix. @tbl-overview visualized first 10 rows of cleaned data to be used in this study.
 
 ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
-data <- read_parquet(here("data","02-analysis_data","analysis_data.parquet"))
+data <- read_parquet(here("data", "02-analysis_data", "analysis_data.parquet"))
 ```
 
 ```{r}
@@ -70,12 +70,16 @@ data <- read_parquet(here("data","02-analysis_data","analysis_data.parquet"))
 
 # Create a GT table with the first 10 rows
 data %>%
+  rename(
+    Ward = ward,
+    `Operating Auspice` = AUSPICE,
+    `Building Type` = bldg_type,
+    `CWELCC Participation` = cwelcc_flag,
+    `Total Space` = TOTSPACE,
+    Subsidy = subsidy
+  ) %>%
   head(10) %>%
-  gt::gt() %>%
-  gt::tab_header(
-    title = "Overview of Cleaned Data",
-    subtitle = "Displaying the first 10 rows"
-  )
+  gt::gt()
 ```
 
 @fig-subsidy visualizes the distribution of subsidies among licensed child care centres in Toronto. The x-axis represents the subsidy status (0 = No, 1 = Yes), while the y-axis shows the count of centres in each category. This distribution highlights the government's prioritization of subsidies to a majority of licensed centres, reflecting efforts to enhance accessibility and affordability. However, the remaining non-subsidized centres indicate potential gaps or disparities in resource allocation, which could be further explored to ensure equitable funding.
@@ -83,7 +87,7 @@ data %>%
 
 ```{r}
 #| label: fig-subsidy
-#| fig-cap: "Distribution of Subsidy Allocation: Disparities Exist"
+#| fig-cap: "Distribution of subsidy allocation among licensed child care centres, indicating that 67.3% of centres receive subsidies while 32.7% do not."
 #| echo: false
 #| message: false
 #| warning: false
@@ -92,22 +96,21 @@ data %>%
 data_summary <- data %>%
   group_by(subsidy) %>%
   summarise(count = n()) %>%
-  mutate(percentage = round(100 * count / sum(count), 1))  # Calculate percentage
+  mutate(percentage = round(100 * count / sum(count), 1)) # Calculate percentage
 
 # Create the bar plot with percentage labels
 plot1 <- ggplot(data_summary, aes(x = factor(subsidy, labels = c("No", "Yes")), y = count)) +
   geom_bar(stat = "identity", fill = c("skyblue", "coral"), alpha = 0.8) +
-  geom_text(aes(label = paste0(percentage, "%")), vjust = -0.5, size = 3) +  # Add percentage labels
+  geom_text(aes(label = paste0(percentage, "%")), vjust = -0.5, size = 3) + # Add percentage labels
   labs(
-    title = "Distribution of Subsidy",
     x = "Subsidy",
     y = "Count"
   ) +
   theme_minimal() +
   theme(
-    plot.title = element_text(size = 9),  # Reduce title size
-    axis.title = element_text(size = 10),  # Reduce axis title size
-    axis.text = element_text(size = 8)    # Reduce axis text size
+    plot.title = element_text(size = 9), # Reduce title size
+    axis.title = element_text(size = 10), # Reduce axis title size
+    axis.text = element_text(size = 8) # Reduce axis text size
   )
 
 plot1
@@ -147,7 +150,7 @@ The data for this study was systematically downloaded, cleaned, analyzed, and vi
 
 - `caret` [@citecaret]: Enabled the development, validation, and evaluation of machine learning models, including training-test splits and performance metrics.
 
-- `pROC` [@citeproc]: Facilitated the computation and visualization of Receiver Operating Characteristic (ROC) curves and Area Under the Curve (AUC) metrics, enabling robust evaluation of the model's classification performance.
+- `pROC` [@citepROC]: Facilitated the computation and visualization of Receiver Operating Characteristic (ROC) curves and Area Under the Curve (AUC) metrics, enabling robust evaluation of the model's classification performance.
 
 - `stargazer` [@citestagazer]: Generated formatted regression tables for outputs.
 
@@ -218,16 +221,16 @@ ggplot(data, aes(x = bldg_type, fill = as.factor(subsidy))) +
   geom_bar(position = "fill", alpha = 0.8) +
   scale_fill_manual(
     values = c("blue", "red"),
-    labels = c("No", "Yes")  # Replace 0/1 with No/Yes
+    labels = c("No", "Yes") # Replace 0/1 with No/Yes
   ) +
   labs(
     x = "Building Type",
     y = "Proportion",
-    fill = "Subsidy Status"
+    fill = "Subsidy"
   ) +
   theme_minimal() +
   theme(
-    axis.text.x = element_text(angle = 90, hjust = 1),  # Rotate x-axis labels for readability
+    axis.text.x = element_text(angle = 90, hjust = 1), # Rotate x-axis labels for readability
     plot.title = element_text(size = 12),
     axis.title = element_text(size = 10),
     axis.text = element_text(size = 9)
@@ -247,16 +250,16 @@ ggplot(data, aes(x = AUSPICE, fill = as.factor(subsidy))) +
   geom_bar(position = "fill", alpha = 0.8) +
   scale_fill_manual(
     values = c("blue", "red"),
-    labels = c("No", "Yes")  # Change legend labels to No/Yes
+    labels = c("No", "Yes") # Change legend labels to No/Yes
   ) +
   labs(
     x = "Auspice",
     y = "Proportion",
-    fill = "Subsidy Status"
+    fill = "Subsidy"
   ) +
   theme_minimal() +
   theme(
-    axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels for readability
+    axis.text.x = element_text(angle = 45, hjust = 1), # Rotate x-axis labels for readability
     plot.title = element_text(size = 12),
     axis.title = element_text(size = 10),
     axis.text = element_text(size = 9)
@@ -280,18 +283,13 @@ cor_matrix <- cor(data %>% select(TOTSPACE, subsidy, cwelcc_flag), use = "comple
 
 # Plot the heatmap without axis labels
 ggcorrplot(cor_matrix, lab = TRUE) +
-  scale_x_discrete(labels = c("Total Space", "Subsidy", "CWELCC Participation")) +  # Update x-axis labels
-  scale_y_discrete(labels = c("Total Space", "Subsidy", "CWELCC Participation")) +  # Update y-axis labels
-  labs(
-    title = "Correlation Heatmap of Key Variables",
-    caption = "Key Variables: Total Space, Subsidy, and CWELCC Participation"
-  ) +
+  scale_x_discrete(labels = c("Total Space", "Subsidy", "CWELCC Participation")) + # Update x-axis labels
+  scale_y_discrete(labels = c("Total Space", "Subsidy", "CWELCC Participation")) + # Update y-axis labels
   theme_minimal() +
   theme(
-    axis.title.x = element_blank(),  # Remove x-axis title
-    axis.title.y = element_blank()   # Remove y-axis title
+    axis.title.x = element_blank(), # Remove x-axis title
+    axis.title.y = element_blank() # Remove y-axis title
   )
-
 ```
 
 # Model {#sec-model}
@@ -328,6 +326,7 @@ Where:
 1. **$\beta_0$ (Intercept):**
 
    - Represents the baseline log-odds of subsidy allocation when all predictors are set to their reference categories or zero values.
+   
    - It provides the starting point for predicting subsidy probabilities.
 
 2. **$\beta_1$ (Non-Profit Auspice):**
@@ -384,8 +383,8 @@ The logistic regression model’s performance metrics are presented in @tbl-coef
 #| message: false
 #| tbl-cap: "Regression Result"
 
-# Load model 
-model <- readRDS(file = here("models","final_model.rds"))
+# Load model
+model <- readRDS(file = here("models", "final_model.rds"))
 
 # Regression table with standard errors and p-values
 model_list <- list(
@@ -393,12 +392,13 @@ model_list <- list(
 )
 
 modelsummary(
-  model_list, 
+  model_list,
   statistic = c("std.error", "p.value")
 )
 ```
 
 The regression model reveals several key observations regarding the predictors and overall goodness of fit. The intercept, estimated at -4.818, represents the baseline log-odds of the outcome when all predictors are at their reference or zero level.  While not directly interpretable, it serves as a baseline reference for the model. Among the predictors, the operating auspice: non-profit Agency category significantly increases the log-odds of the outcome, with an estimate of 2.937 and a small standard error of 0.192, indicating a strong and reliable positive effect. However, the operating auspice: other category shows an unusually large coefficient (18.680) paired with a very high standard error (631.207), suggesting instability. The CWELCC participation variable also exhibits a strong and reliable positive effect, with an estimate of 3.101 and a standard error of 0.346, indicating that being flagged as CWELCC significantly increases the log-odds of the outcome.  Additionally, the total space variable has a small but statistically significant effect, with an estimate of 0.013 and a low standard error of 0.003, reflecting robustness. In terms of model fit, the dataset includes 750 observations, and the model's AIC (760.8) and BIC (785.7) suggest a reasonable balance between goodness of fit and complexity, as lower values are generally preferred [@burnhammodel].  The log-likelihood of -375.414 also supports an adequate fit, with a higher (less negative) value indicating better alignment between the model and the data.  Finally, the RMSE of 0.32 reflects the model's predictive accuracy, with a low value indicating that the model's predictions closely match the observed data.  Overall, the model performs well but may require refinement, particularly in addressing instability in the AUSPICE: Other variable.
+
 @fig-cp further visualizes the significance of predictors.
 
 ```{r}
@@ -421,7 +421,6 @@ ggplot(tidy_model, aes(x = estimate, y = reorder(term, abs(estimate)), color = s
   geom_errorbarh(aes(xmin = conf.low, xmax = conf.high), height = 0.2) +
   scale_color_manual(values = c("Significant" = "red", "Not Significant" = "black")) +
   labs(
-    title = "Coefficient Plot",
     x = "Coefficient Estimate",
     y = "Predictor Variables",
     color = "Significance"
@@ -439,10 +438,20 @@ The evaluation of the logistic regression model shows strong performance based o
 #| warning: false
 
 # ROC Curve and AUC
-roc_curve <- roc(data$subsidy, 
-                 predict(model, 
-                         newdata = data, type = "response"))
-plot(roc_curve, main = "ROC Curve", print.auc=T)
+roc_curve <- roc(
+  data$subsidy,
+  predict(model,
+    newdata = data %>%
+      rename(
+        Ward = ward,
+        `Operating_Auspice` = AUSPICE,
+        `Building_Type` = bldg_type,
+        `CWELCC_Participation` = cwelcc_flag,
+        `Total_Space` = TOTSPACE
+      ), type = "response"
+  )
+)
+plot(roc_curve, main = "ROC Curve", print.auc = T)
 ```
 
 The ROC curve in @fig-roc shown further validates the model's classification ability, with an AUC of 0.906. An AUC value close to 1 indicates excellent discriminative power, where the model effectively separates true positives from false positives. The AUC of 0.8998 places this model on the borderline of very good and excellent discrimination, underscoring its robust predictive capacity.
@@ -454,7 +463,14 @@ The ROC curve in @fig-roc shown further validates the model's classification abi
 #| message: false
 #| warning: false
 # Generate predicted probabilities for the test dataset
-data$predicted_prob <- predict(model, newdata = data, type = "response")
+data$predicted_prob <- predict(model, newdata = data %>%
+  rename(
+    Ward = ward,
+    `Operating_Auspice` = AUSPICE,
+    `Building_Type` = bldg_type,
+    `CWELCC_Participation` = cwelcc_flag,
+    `Total_Space` = TOTSPACE
+  ), type = "response")
 
 # Predicted vs. Observed Scatterplot
 ggplot(data, aes(x = predicted_prob, y = subsidy)) +
@@ -518,7 +534,7 @@ The @fig-cr The component + residual plots evaluate the linearity of the continu
 #| message: false
 #| warning: false
 # Customizing Component + Residual Plots with concise y-axis label
-crPlots(model, ylab = "Component+Residuals")  # Shortened y-axis label
+crPlots(model, ylab = "Component+Residuals") # Shortened y-axis label
 ```
 
 - `TOTSPACE`: The relationship between the total space (TOTSPACE) and the logit appears approximately linear, as indicated by the flat, consistent pattern of residuals around the horizontal axis. This supports the assumption of linearity.

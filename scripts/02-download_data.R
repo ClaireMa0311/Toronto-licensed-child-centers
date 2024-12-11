@@ -23,7 +23,7 @@ childcare_licence_resources <- childcare_licence_packages %>%
 # Display the list of resources available in the "childcare Licence Statistics" package
 childcare_licence_resources
 # Download the .csv dataset
-childcare_licence_statistics <- childcare_licence_resources[3,] %>%
+childcare_licence_statistics <- childcare_licence_resources[3, ] %>%
   get_resource()
 childcare_licence_statistics
 
