@@ -13,13 +13,14 @@ Some of the R code used to create this work was adapted from https://github.com/
 ## File Structure
 
 The repo is structured as:
-- `data/00-simulated_data/simulated_data1.csv` contains the simulated data for testing purpose.
-- `data/01-raw_data/raw_data` contains raw data used in this investigation.
-- `data/02-analysis_data/analysis_data` contains cleaned data used in this investigation.
-- `model` contains fitted models and an API of the final chosen model.
-- `other`  contains copies of LLM conversations, literature, and sketches of the dataset and graphs featured in this report.
+- `data/00-simulated_data` contains the simulated data for testing purpose.
+- `data/01-raw_data` contains raw data used in this investigation.
+- `data/02-analysis_data` contains cleaned data used in this investigation.
+- `models` contains fitted models and an API of the final chosen model.
+- `other` contains copies of LLM conversations, literature, and sketches of the dataset and graphs featured in this report.
 - `paper` contains the Quarto file used to generate the PDF, and a file with the paper's references. Since there is rendering problem paper.pdf is lacted outside of this folder.
 - `scripts` contains R scripts for simulating, downloading, cleaning, testing, visualizing and modeling the data.
 
 ## Statement on LLM usage
+
 Aspects of the code and writing were written with the help of the AI tool, ChatGPT. The entire chat history is available in inputs/llms/usage.txt.
