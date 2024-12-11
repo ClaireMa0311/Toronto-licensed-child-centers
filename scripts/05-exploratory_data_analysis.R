@@ -5,7 +5,7 @@
 # Contact: minglu.ma@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: The `dplyr`,'readr', 'ggplot2', 'reshape' and 'gridExtra'packages must be installed and loaded
-# Any other information needed? Make sure you are in the `starter_folder` rproj
+# Any other information needed?  Make sure you are in the `Child_Center_Analysis rproj
 
 #### Workspace setup ####
 library(dplyr)

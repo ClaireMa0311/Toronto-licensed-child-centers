@@ -7,13 +7,13 @@
 # Pre-requisites:
 # - The `arrow` and `testthat` packages must be installed and loaded
 # - 03-clean_data.R must have been run
-# Any other information needed? Make sure you are in the `starter_folder` rproj
+# Any other information needed? Make sure you are in the `Child_Center_Analysis` rproj
 
 #### Workspace setup ####
-library("arrow")
+library(arrow)
+library(testthat)
 
 data <- read_parquet("data/02-analysis_data/analysis_data.parquet")
-
 
 #### Test data ####
 # Test if the data was successfully loaded

@@ -5,7 +5,7 @@
 # Contact: minglu.ma@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: The `caret`, `arrow`, `modelsummary` and 'ggplot2' package must be installed and loaded
-# Any other information needed? Make sure you are in the `starter_folder` rproj
+# Any other information needed?  Make sure you are in the `Child_Center_Analysis rproj
 
 #### Workspace setup ####
 library(caret)
@@ -14,6 +14,7 @@ library(arrow)
 library(modelsummary)
 
 data <- read_parquet("data/02-analysis_data/analysis_data.parquet")
+
 # Encode categorical variables
 data$AUSPICE <- as.factor(data$AUSPICE)
 data$bldg_type <- as.factor(data$bldg_type)

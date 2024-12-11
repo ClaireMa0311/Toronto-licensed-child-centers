@@ -5,7 +5,7 @@
 # Contact: minglu.ma@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: The `dplyr`, `arrow`, and 'readr' packages must be installed and loaded
-# Any other information needed? Make sure you are in the `starter_folder` rproj
+# Any other information needed? Make sure you are in the `Child_Center_Analysis` rproj
 
 #### Workspace setup ####
 library(dplyr)

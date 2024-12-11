@@ -7,7 +7,7 @@
 # Pre-requisites:
 # - The `tidyverse` and `testthat` packages must be installed and loaded
 # - 00-simulate_data.R must have been run
-# Any other information needed? Make sure you are in the `starter_folder` rproj
+# Any other information needed? Make sure you are in the `Child_Center_Analysis` rproj
 
 
 #### Workspace setup ####

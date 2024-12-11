@@ -5,7 +5,7 @@
 # Contact: minglu.ma@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: The `opendatatoronto` and 'tidyverse' packages must be installed and loaded
-# Any other information needed? None
+# Any other information needed? Make sure you are in the `Child_Center_Analysis` rproj
 
 
 #### Workspace setup ####
