@@ -332,23 +332,23 @@ Where:
 
 2. **$\beta_1$ (Non-Profit Auspice):**
 
-- Measures the effect of a center being operated as a non-profit compared to the baseline (e.g., commercial auspice) on the log-odds of subsidy allocation.
+   - Measures the effect of a center being operated as a non-profit compared to the baseline (e.g., commercial auspice) on the log-odds of subsidy allocation.
    
-- A positive $\beta_1$ increases the likelihood of receiving a subsidy for non-profit centers relative to commercial centers.
+   - A positive $\beta_1$ increases the likelihood of receiving a subsidy for non-profit centers relative to commercial centers.
    
 3. **$\beta_2$ (Other Auspice):**
 
-- Measures the effect of a center being operated as "other type" compared to the baseline (e.g., commercial auspice) on the log-odds of subsidy allocation.
+   - Measures the effect of a center being operated as "other type" compared to the baseline (e.g., commercial auspice) on the log-odds of subsidy allocation.
    
-- A positive $\beta_2$ increases the likelihood of receiving a subsidy for other-type centers relative to commercial centers.
+   - A positive $\beta_2$ increases the likelihood of receiving a subsidy for other-type centers relative to commercial centers.
 
 4. **$\beta_3$ (CWELCC Participation):**
 
-- Captures the influence of participating in the Canada-Wide Early Learning and Child Care (CWELCC) program on the log-odds of subsidy allocation.
+   - Captures the influence of participating in the Canada-Wide Early Learning and Child Care (CWELCC) program on the log-odds of subsidy allocation.
 
 5. **$\beta_4$ (Total Space):**
 
-- Represents the effect of the number of licensed child care spaces (a continuous variable) on the log-odds of subsidy allocation.
+   - Represents the effect of the number of licensed child care spaces (a continuous variable) on the log-odds of subsidy allocation.
 
 
 ## Model Justification 
