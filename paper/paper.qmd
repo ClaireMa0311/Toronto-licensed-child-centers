@@ -111,7 +111,6 @@ plot1 <- ggplot(data_summary, aes(x = factor(subsidy, labels = c("No", "Yes")), 
   )
 
 plot1
-
 ```
 
 ## Method
@@ -138,7 +137,7 @@ The data for this study was systematically downloaded, cleaned, analyzed, and vi
 
 - `ggcorrplot` [@citeggcorrplot]: Simplified the visualization of correlation matrices with customizable heatmaps, including options for labeling and styling to enhance interpretability and presentation.
 
-- `glmnet` [@]: Applied for fitting regularized regression models and feature selection.
+- `glmnet` [@citeglmnet]: Applied for fitting regularized regression models and feature selection.
 
 - `modelsummary` [@citemodelsummary]: Streamlined the creation of comprehensive and customizable summary tables for regression models, including key statistics such as AIC, BIC, and coefficient estimates, to facilitate clear model comparisons and reporting.
 
@@ -277,6 +276,8 @@ ggplot(data, aes(x = AUSPICE, fill = as.factor(subsidy))) +
 # Define new labels for the graph without renaming the original columns
 new_labels <- c("Total Space", "Subsidy", "CWELCC Participation")
 
+cor_matrix <- cor(data %>% select(TOTSPACE, subsidy, cwelcc_flag), use = "complete.obs")
+
 # Plot the heatmap without axis labels
 ggcorrplot(cor_matrix, lab = TRUE) +
   scale_x_discrete(labels = c("Total Space", "Subsidy", "CWELCC Participation")) +  # Update x-axis labels
@@ -308,7 +309,7 @@ To investigate the factors influencing subsidy allocation to licensed child care
 The logistic regression model can be expressed mathematically as follows:
 
 $$
-\text{logit}(P(Y=1)) = \beta_0 + \beta_1 (\text{Non-Profit Auspice}) + \beta_2 (\text{CWELCC Participation}) + \beta_3 (\text{Total Space})
+\text{logit}(P(Y=1)) = \beta_0 + \beta_1 (\text{Non-Profit Auspice}) + \beta_2 (\text{Other Auspice}) + \\ \beta_3 (\text{CWELCC Participation}) + \beta_4 (\text{Total Space})
 $$
 
 Where:
@@ -331,17 +332,24 @@ Where:
 
 2. **$\beta_1$ (Non-Profit Auspice):**
 
-   - Measures the effect of a center being operated as a non-profit compared to the baseline (e.g., commercial auspice) on the log-odds of subsidy allocation.
-   - A positive $\beta_1$ increases the likelihood of receiving a subsidy for non-profit centers relative to the reference group.
+- Measures the effect of a center being operated as a non-profit compared to the baseline (e.g., commercial auspice) on the log-odds of subsidy allocation.
+   
+- A positive $\beta_1$ increases the likelihood of receiving a subsidy for non-profit centers relative to commercial centers.
+   
+3. **$\beta_2$ (Other Auspice):**
 
-3. **$\beta_2$ (CWELCC Participation):**
-   - Captures the influence of participating in the Canada-Wide Early Learning and Child Care (CWELCC) program on the log-odds of subsidy allocation.
+- Measures the effect of a center being operated as "other type" compared to the baseline (e.g., commercial auspice) on the log-odds of subsidy allocation.
+   
+- A positive $\beta_2$ increases the likelihood of receiving a subsidy for other-type centers relative to commercial centers.
 
-4. **$\beta_3$ (Total Space):**
-   - Represents the effect of the number of licensed child care spaces (a continuous variable) on the log-odds of subsidy allocation.
+4. **$\beta_3$ (CWELCC Participation):**
 
-5. **$\epsilon$ (Error Term):**
-   - Accounts for unexplained variation in the log-odds of subsidy allocation not captured by the predictors
+- Captures the influence of participating in the Canada-Wide Early Learning and Child Care (CWELCC) program on the log-odds of subsidy allocation.
+
+5. **$\beta_4$ (Total Space):**
+
+- Represents the effect of the number of licensed child care spaces (a continuous variable) on the log-odds of subsidy allocation.
+
 
 ## Model Justification 
 
