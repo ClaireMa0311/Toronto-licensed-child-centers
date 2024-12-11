@@ -42,21 +42,21 @@ library(ggcorrplot)
 
 Child care subsidies play a critical role in making high-quality early childhood education and care accessible to families and communities. In Toronto, licensed child care centres serve as essential providers, offering regulated and professional environments that support child development. Subsidies for licensed child care centres help close the affordability gap by offsetting the high costs of quality care, making it accessible to more families [@cleveland2009nonprofit]. These subsidies not only ease the financial burden on families but also ensure that children have access to nurturing environments that foster cognitive, social, and emotional growth during their formative years [@vines2020accessing]. Understanding the factors that determine which licensed centres receive subsidies is crucial for policymakers and stakeholders to promote equitable resource allocation and maximize the benefits of early childhood programs.
 
-Licensed child care centres in urban settings like Toronto play a pivotal role in delivering high-quality, structured child care. These centres adhere to stringent regulations, ensuring compliance with standards for safety, staffing, and curriculum. Research highlights that children attending licensed centres, particularly those supported by subsidies, experience better developmental outcomes. Subsidized centres provide professional environments with trained educators, comprehensive programming, and age-appropriate resources, offering children a strong foundation for lifelong learning and success. Subsidies are a cornerstone of this ecosystem, enabling licensed centres to cover operational costs, retain qualified staff, and maintain compliance with regulatory standards, all of which enhance the quality of care provided.
+Licensed child care centres in urban areas like Toronto provide high-quality, regulated care, ensuring safety, staffing, and curriculum standards. Research shows that subsidized centres, with trained educators and comprehensive programming, support better child development outcomes. Subsidies are crucial for covering operational costs, retaining qualified staff, and maintaining regulatory compliance, enhancing the quality of care.
 
 Despite their importance, disparities in the allocation of subsidies remain a significant concern. Research indicates that centres in certain neighborhoods or serving specific populations may receive fewer subsidies, even when demand is high [@Johnson_Ryan_Brooks_2012]. Additionally, characteristics such as enrollment capacity, accreditation status, and program focus (e.g., infant care versus pre-kindergarten) often influence a centre’s eligibility and prioritization for funding. These discrepancies highlight the need for a data-driven approach to understanding and improving the distribution of subsidies among licensed child care centres, ensuring that resources are allocated equitably to maximize their impact.
 
-This study utilizes the Toronto Open Data: Licensed Child Care Centres dataset to explore the factors that affect subsidy allocation to licensed centres. By analyzing variables such as ward, operating auspice (Commercial, Non Profit or Public), CWELCC, type of building, and total space, this research aims to uncover the question - “What factors influence the allocation of subsidies to licensed child care centres in Toronto?”. The findings will contribute to informing policies that promote equity and efficiency in subsidy allocation, ultimately supporting the goals of accessible and high-quality child care in Toronto. Additionally, these insights can serve as a valuable tool for child care centres to self-assess and enhance their eligibility for subsidies.
+This study analyzes the Toronto Open Data: Licensed Child Care Centres dataset to examine factors influencing subsidy allocation, including ward, operating auspice, CWELCC participation, building type, and total space [@citeopendatatoronto; @toronto2024licensed]. The findings aim to inform equitable and efficient subsidy policies, support accessible, high-quality child care in Toronto, and help centres enhance their subsidy eligibility.
 
 Using a logistic regression model, the analysis identifies three key predictors of subsidy allocation: non-profit governance, participation in the Canada-Wide Early Learning and Child Care (CWELCC) program, and licensed capacity. The findings reveal that centres operated by non-profit organizations are significantly more likely to receive subsidies, reflecting a policy preference for supporting entities that prioritize social objectives over profit motives. Participation in the CWELCC program emerges as the strongest predictor, highlighting the importance of alignment with affordability initiatives in determining funding priorities. Additionally, larger centres with greater licensed capacity are moderately more likely to receive subsidies, indicating that operational scale plays a role in funding decisions, though it is less significant than governance and policy alignment. These findings underscore the need for policies that address disparities in subsidy distribution while ensuring that funding supports accessible, high-quality child care for families across Toronto.
 
-The remainder of this paper is structured as follows. @sec-data describes the dataset used for the analysis, including its source, key variables, and preprocessing steps, emphasizing its real-world context and relevance to understanding subsidy allocation in Toronto's child care system. @sec-model details the logistic regression model employed in the study, including the rationale for its selection, mathematical formulation, and key predictors. The model assumptions, diagnostics, and validation methods are also discussed to ensure robustness and reliability. @sec-results contains the results of the logistic regression analysis are presented, highlighting the significant predictors of subsidy allocation, ass well as the model's fit. @sec-discussion discusses what was done in this study, giving detailed explanation of implications of the findings, limitations and suggestion for future studies. Furthermore, an appendix including supplementary materials and data collection evaluation is provided to ensure transparency and reproducibility.
+The paper is structured as follows: @sec-data introduces the dataset, its source, key variables, and preprocessing steps, highlighting its relevance to understanding subsidy allocation in Toronto's child care system. @sec-model outlines the logistic regression model, including its rationale, formulation, key predictors, and validation methods. @sec-results presents the analysis results, focusing on significant predictors and model fit. @sec-discussion interprets the findings, discusses implications, and outlines limitations and future research directions. An appendix with supplementary materials and data evaluation is included for transparency and reproducibility.
 
 # Data {#sec-data}
 
 ## Data Overview
 
-The dataset used in this study was sourced from the [@citeopendatatoronto; @toronto2024licensed] made publicly available by the City of Toronto. This original raw dataset provides detailed information about licensed child care centres, including 20 variables capturing aspects of their location, operating auspice (e.g., non-profit, public, or commercial), space usage, building type, participation in government programs such as the Canada-Wide Early Learning and Child Care (CWELCC) system, and other operational details. These data offer valuable insights into the factors influencing subsidy allocation, a key policy tool for improving access to early childhood education and care. By translating real-world phenomena into structured data entries, this dataset enables a comprehensive exploration of equity and efficiency in child care funding. Detailed data collection analysis is in the Appendix. @tbl-overview visualized first 10 rows of cleaned data to be used in this study.
+The dataset used in this study was sourced from a publicly available site by the City of Toronto [@citeopendatatoronto; @toronto2024licensed]. This original raw dataset provides detailed information about licensed child care centres, including 20 variables capturing aspects of their location, operating auspice (e.g., non-profit, public, or commercial), space usage, building type, participation in government programs such as the Canada-Wide Early Learning and Child Care (CWELCC) system, and other operational details. These data offer valuable insights into the factors influencing subsidy allocation, a key policy tool for improving access to early childhood education and care. By translating real-world phenomena into structured data entries, this dataset enables a comprehensive exploration of equity and efficiency in child care funding. Detailed data collection analysis is in the Appendix. @tbl-overview visualized first 10 rows of cleaned data to be used in this study.
 
 ```{r, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
 data <- read_parquet(here("data", "02-analysis_data", "analysis_data.parquet"))
@@ -64,6 +64,7 @@ data <- read_parquet(here("data", "02-analysis_data", "analysis_data.parquet"))
 
 ```{r}
 #| label: tbl-overview
+#| tbl-cap: "Overview of the cleaned dataset for licensed child care centers, summarizing key variables such as governance model (Operating Auspice), building type, CWELCC participation, total licensed space, and subsidy status, providing a snapshot of the dataset's structure and focus"
 #| echo: false
 #| warning: false
 #| message: false
@@ -118,49 +119,9 @@ plot1
 
 ## Method
 
-The dataset used for this study is the **`Licensed Child Care Centres dataset`**, sourced from the [@citeopendatatoronto; @toronto2024licensed] It provides detailed information about licensed child care centres in Toronto, capturing aspects such as their governance, capacity, infrastructure, and subsidy status. The original dataset consisted of 1071 records for all licensed child care centres within the city. For this analysis, the data underwent preprocessing to focus on variables relevant to the study, such as subsidy status, building type, CWELCC participation, total space, and operating auspice. These variables were retained to examine how different factors influence subsidy allocation. The dependent variable **`subsidy`**, originally recorded as "Yes"/"No," was encoded as 1 for subsidized and 0 for non-subsidized centres. Similarly, the **CWELCC participation** variable was converted into a binary format (1 =Y, 0 =N). Categorical variables such as **building type** and **`operational AUSPICE`** were consolidated to simplify analysis and address sparse categories. Additionally, missing and irrelevant records were removed to ensure the dataset was both accurate and meaningful for the research objectives.
+The dataset used for this study is the **`Licensed Child Care Centres dataset`**, sourced from the [@citeopendatatoronto; @toronto2024licensed]. It provides detailed information about licensed child care centres in Toronto, capturing aspects such as their governance, capacity, infrastructure, and subsidy status. The original dataset consisted of 1071 records for all licensed child care centres within the city. For this analysis, the data underwent preprocessing to focus on variables relevant to the study, such as subsidy status, building type, CWELCC participation, total space, and operating auspice. These variables were retained to examine how different factors influence subsidy allocation. The dependent variable **`subsidy`**, originally recorded as "Yes"/"No," was encoded as 1 for subsidized and 0 for non-subsidized centres. Similarly, the **CWELCC participation** variable was converted into a binary format (1 =Y, 0 =N). Categorical variables such as **building type** and **`operational AUSPICE`** were consolidated to simplify analysis and address sparse categories. Additionally, missing and irrelevant records were removed to ensure the dataset was both accurate and meaningful for the research objectives.
  
-The data for this study was systematically downloaded, cleaned, analyzed, and visualized using **`R`** [@citeR], a statistical programming language. The following are major packages used for this study:
-
-- `opendatatoronto`[@citeopendatatoronto]: Used to access and retrieve the Licensed Child Care Centres dataset directly from the City of Toronto's open data portal.
-
--`arrow` [@citearrow]: Provided efficient tools for reading and writing Parquet files, enabling fast and memory-efficient handling of large datasets during analysis.
-
-- `here` [@citehere]: Simplified file referencing by creating relative paths, ensuring reproducibility and consistency in accessing datasets, scripts, and outputs across different working environments.
-
-- `readr` [@citereadr]: Simplified the import and parsing of raw data into R.
-
-- `tidyverse` [@citetidyverse]: Streamlined data manipulation, cleaning, and visualization processes.
-
-- `dplyr` [@citedplyr]: Provided tools for filtering, transforming, and summarizing the dataset effectively.
-
-- `tidyr` [@citetidyr]: Enabled data tidying processes such as reshaping, separating, or combining, and handling missing values to structure the dataset into a clean and analyzable format.
-
-- `ggplot2` [@citeggplot2]: Created powerful and flexible visualizations tailored to the analysis needs.
-
-- `ggcorrplot` [@citeggcorrplot]: Simplified the visualization of correlation matrices with customizable heatmaps, including options for labeling and styling to enhance interpretability and presentation.
-
-- `glmnet` [@citeglmnet]: Applied for fitting regularized regression models and feature selection.
-
-- `modelsummary` [@citemodelsummary]: Streamlined the creation of comprehensive and customizable summary tables for regression models, including key statistics such as AIC, BIC, and coefficient estimates, to facilitate clear model comparisons and reporting.
-
-- `stats` [@citestats]: Provided core statistical functions to fit models, perform hypothesis testing, and calculate measures such as p-values, log-likelihoods, and AIC for model evaluation.
-
-- `car` [@citecar]: Used for diagnostic tools, including Variance Inflation Factor (VIF) tests, to assess multicollinearity.
-
-- `caret` [@citecaret]: Enabled the development, validation, and evaluation of machine learning models, including training-test splits and performance metrics.
-
-- `pROC` [@citepROC]: Facilitated the computation and visualization of Receiver Operating Characteristic (ROC) curves and Area Under the Curve (AUC) metrics, enabling robust evaluation of the model's classification performance.
-
-- `stargazer` [@citestagazer]: Generated formatted regression tables for outputs.
-
-- `broom` [@citebroom]: Simplified the process of converting model outputs into tidy data frames, enabling seamless integration of statistical results with visualization and reporting workflows.
-
-- `kableExtra` [@citekableExtra]:Enhanced the presentation of tables by adding advanced formatting options, including captions, headers, and styling, for polished and professional reporting.
-
-- `gt` [@citegt]: Enabled the creation of aesthetically pleasing and highly customizable tables for presenting data and model summaries in a clean and professional format.
-
-- `knitr` [@citeknitr]: Dynamically integrated code, results, and plots into the final document for seamless reporting.
+The data for this study was systematically downloaded, cleaned, analyzed, and visualized using **`R`** [@citeR], a statistical programming language. Several `R` packages were utilized in this study and they are described in {@sec-R-package}.
 
 ## Measurement
 
@@ -212,7 +173,7 @@ The variables were carefully selected based on literature-supported relevance to
 
 ```{r}
 #| label: fig-relationbldgtype
-#| fig-cap: "Subsidy Allocation by Building Type: Higher Subsidy Proportions in Public and Purpose-Built Facilities"
+#| fig-cap: "Proportional distribution of subsidy across building types, highlighting variations in subsidy allocation among different facility categories based on their infrastructure and alignment with eligibility criteria."
 #| echo: false
 #| message: false
 #| warning: false
@@ -241,7 +202,7 @@ ggplot(data, aes(x = bldg_type, fill = as.factor(subsidy))) +
 
 ```{r}
 #| label: fig-relationAuspice
-#| fig-cap: "Subsidy Allocation by Operating Auspice: Non-Profit Agencies and 'Other' Predominantly Subsidized"
+#| fig-cap: "Proportional distribution of subsidy by operating auspice, illustrating the prevalence of subsidies across different governance models such as commercial, non-profit, and other agencies,  highlighting the high proporation of subsidized centres of non-profit agencies, reflecting the alignment of subsidies with non-profit objectives of affordability and accessibility."
 #| echo: false
 #| message: false
 #| warning: false
@@ -266,12 +227,12 @@ ggplot(data, aes(x = AUSPICE, fill = as.factor(subsidy))) +
   )
 ```
 
-@fig-key a heatmap illustrates the correlations between three variables: total space, CWELCC participation and subsidy. The positive correlation between total space and subsidy (0.25) suggests that larger facilities are modestly more likely to receive subsidies, reflecting their capacity to serve larger populations or provide greater public benefits. This aligns with research indicating that larger organizations often have the resources and visibility to secure subsidies [@hansmann1980role; @salamon2002tools]. Additionally, the stronger correlation between CWELCC participation and subsidy (0.48) highlights that subsidy allocation may target entities meeting specific programmatic or policy criteria, consistent with the literature emphasizing strategic targeting of subsidies to maximize societal impact [@weisbrod1998profit]. The weaker correlation between total space and CWELCC oarticipation (0.16) suggests that program eligibility is less dependent on size and more on qualitative factors like service type or demographic focus, which is supported by [@anheier2005nonprofit] analysis of non-profit funding models. Together, these correlations emphasize the nuanced role of subsidies in balancing operational scale and policy alignment, underscoring the importance of strategic allocation in public funding [@salamon1995partners].
+@fig-key a heatmap illustrates the correlations between three variables: total space, CWELCC participation and subsidy. The positive correlation between total space and subsidy (0.25) suggests that larger facilities are modestly more likely to receive subsidies, reflecting their capacity to serve larger populations or provide greater public benefits. This aligns with research indicating that larger organizations often have the resources and visibility to secure subsidies [@hansmann1980role; @salamon2002tools]. Additionally, the stronger correlation between CWELCC participation and subsidy (0.48) highlights that subsidy allocation may target entities meeting specific programmatic or policy criteria, consistent with the literature emphasizing strategic targeting of subsidies to maximize societal impact [@weisbrod1998profit]. The weaker correlation between total space and CWELCC oarticipation (0.16) suggests that program eligibility is less dependent on size and more on qualitative factors like service type or demographic focus, which is supported by an established analysis of non-profit funding models [@anheier2005nonprofit]. Together, these correlations emphasize the nuanced role of subsidies in balancing operational scale and policy alignment, underscoring the importance of strategic allocation in public funding [@salamon1995partners].
 
 
 ```{r}
 #| label: fig-key
-#| fig-cap: "Correlation Between Total Space, Subsidy Allocation, and CWELCC Participation"
+#| fig-cap: "Correlation heatmap illustrating the relationships between total space, subsidy, and CWELCC participation, showing a moderate positive correlation between subsidy and CWELCC participation (0.48) and weaker correlations with total space (0.25), reflecting the nuanced factors influencing subsidy allocation."
 #| echo: false
 #| message: false
 #| warning: false
@@ -307,7 +268,9 @@ To investigate the factors influencing subsidy allocation to licensed child care
 The logistic regression model can be expressed mathematically as follows:
 
 $$
+\begin{aligned}
 \text{logit}(P(Y=1)) = \beta_0 + \beta_1 (\text{Non-Profit Auspice}) + \beta_2 (\text{Other Auspice}) + \\ \beta_3 (\text{CWELCC Participation}) + \beta_4 (\text{Total Space})
+\end{aligned}
 $$
 
 Where:
@@ -318,7 +281,6 @@ Where:
     \[
     \text{logit}(P(Y=1)) = \ln\left(\frac{P(Y=1)}{1 - P(Y=1)}\right)
     \]
-    This transformation ensures that the predicted probabilities remain between 0 and 1.
 \end{itemize}
 
 ### Parameters:
@@ -381,7 +343,7 @@ The logistic regression model’s performance metrics are presented in @tbl-coef
 #| echo: false
 #| warning: false
 #| message: false
-#| tbl-cap: "Regression Result"
+#| tbl-cap: "Final logistic regression model results for subsidy allocation, showing significant predictors including operating auspice (Non-Profit Agency), CWELCC participation, and total space, with model fit metrics (AIC = 760.8, BIC = 785.7, RMSE = 0.32) indicating robust performance."
 
 # Load model
 model <- readRDS(file = here("models", "final_model.rds"))
@@ -403,7 +365,7 @@ The regression model reveals several key observations regarding the predictors a
 
 ```{r}
 #| label: fig-cp
-#| fig-cap: "Coefficient Estimates for Predictors of Subsidy Allocation"
+#| fig-cap: "Coefficient plot for the logistic regression model, highlighting the significance of predictors with 95% confidence intervals, where most predictors demonstrate strong positive associations with subsidy allocation, exceprt for 'Other' operating auspice lacks statistical significance."
 #| echo: false
 #| message: false
 #| warning: false
@@ -432,7 +394,7 @@ The evaluation of the logistic regression model shows strong performance based o
 
 ```{r}
 #| label: fig-roc
-#| fig-cap: "ROC Curve for Model Performance: Strong Model Performance with AUC 0.906"
+#| fig-cap: "Receiver Operating Characteristic (ROC) curve demonstrating the model's classification performance, with an Area Under the Curve (AUC) of 0.906, indicating excellent discriminatory ability between subsidized and non-subsidized child care centers."
 #| echo: false
 #| message: false
 #| warning: false
@@ -458,7 +420,7 @@ The ROC curve in @fig-roc shown further validates the model's classification abi
 
 ```{r}
 #| label: fig-pvo
-#| fig-cap: " Predicted vs. Observed Probability Plot: Model Calibration and Accuracy"
+#| fig-cap: " Plot of observed outcomes versus predicted probabilities, illustrating the alignment between model predictions and actual subsidy allocation, with a strong diagonal trend indicating good predictive performance."
 #| echo: false
 #| message: false
 #| warning: false
@@ -493,15 +455,16 @@ Overall, this graph demonstrates that the model is well-calibrated and effective
 
 # Discussion {#sec-discussion}
 
-Subsidy allocation to licensed child care centres in Toronto addresses the critical issue of affordability, making high-quality early childhood education accessible to more families as licensed centres must meet strict safety, staffing, and programming standards, which foster children’s cognitive, social, and emotional growth [@cleveland2009nonprofit]. Without subsidies, the cost of regulated care can be prohibitive, particularly for low-income households. This paper undertakes a detailed examination of the factors influencing subsidy allocation to licensed child care centres in Toronto, leveraging the City of Toronto's Licensed Child Care Centres dataset from Open Data porta, which includes detailed information about 1,071 licensed centers[@citeopendatatoronto]. This study employs a logistic regression model-binomial family to identify relationships between key predictor variables and the binary dependent variable – receiving subsidies.
+Subsidy allocation to licensed child care centres in Toronto addresses the critical issue of affordability, making high-quality early childhood education accessible to more families as licensed centers must meet strict safety, staffing, and programming standards, which foster children’s cognitive, social, and emotional growth [@cleveland2009nonprofit]. Without subsidies, the cost of regulated care can be prohibitive, particularly for low-income households. This paper undertakes a detailed examination of the factors influencing subsidy allocation to licensed child care centres in Toronto, leveraging the City of Toronto's Licensed Child Care Centres dataset from Open Data porta, which includes detailed information about 1,071 licensed centers [@citeopendatatoronto]. This study employs a logistic regression model-binomial family to identify relationships between key predictor variables and the binary dependent variable – receiving subsidies.
 
-The dataset underwent meticulous preprocessing to ensure reliability and accuracy for analysis. This involved several key steps of data cleaning, variable transformation and training-test Split. Initially, variables of operating auspice, ward, building type, total space and CWELCC participation were chosen based their relevance and practical influence subsidy outcomes and forecasting supported by scholar literatures. After fitting and improving the model using stepwise selection based on the Akaike Information Criterion (AIC), non-significant variables (ward and building type) were removed. The final model retained operating auspice, CWELCC participation, and total space as key predictors. The assumptions underpinning the logistic regression model were thoroughly validated, ensuring its statistical rigor and reliability. Independence of observations was confirmed, as each data point corresponds to a unique child care centre, eliminating concerns of clustering or dependency. Linearity between continuous predictors, such as total space, and the logit transformation was validated through component + residual plots, which revealed consistent patterns, supporting the appropriateness of the model. Additionally, multicollinearity was minimized, with Variance Inflation Factor (VIF) values well below the critical threshold of 5, indicating that the predictors are independent and the coefficient estimates are stable. Together, these validations affirm the robustness of the model and its suitability for the analysis.
 
-The result coefficients in table the logistic regression model provide a detailed understanding of how key predictors influence the likelihood of subsidy allocation to licensed child care centres in Toronto. By measuring the change in log-odds of subsidy allocation associated with each predictor, the model quantifies the relative importance of governance models, program participation, and operational capacity. The coefficient for non-profit auspice emerged as strongly positive and statistically significant, indicating that non-profit child care centres are far more likely to receive subsidies than commercial or public centres. This is reflective of policy priorities that favor organizations with a social mission over those with profit-oriented objectives. Non-profits are often viewed as better aligned with public goals of equity and accessibility, as they reinvest surplus revenues into improving care quality rather than distributing profits [@hansmann1980role]. This is consistent with research by [@salamon1995partners], who noted that non-profits often fill critical gaps in the provision of public services, making them natural candidates for targeted funding. In the context of child care, non-profits may also be more likely to serve economically vulnerable populations, further justifying their prioritization for subsidies. The odds ratio derived from this coefficient underscores the strength of this relationship, suggesting that non-profit centres are several times more likely to receive subsidies compared to commercial centres. Participation in the Canada-Wide Early Learning and Child Care (CWELCC) program was the most significant predictor in the model, with a highly positive coefficient. This result highlights the critical role of policy alignment in subsidy allocation. Centres participating in CWELCC demonstrate compliance with national and provincial affordability initiatives, making them high-priority recipients of government funding. Research by [@bennett2011working] supports this finding, emphasizing that early childhood programs aligned with broader governmental objectives are often better positioned to secure resources. The odds ratio for CWELCC participation indicates that such centres are substantially more likely to receive subsidies, which is consistent with targeted funding strategies aimed at expanding access to high-quality, affordable child care [@kaga2010caring]. Total space, representing the number of spaces a centre is licensed to operate, was another important predictor, although its coefficient was smaller in magnitude compared to operating auspice and CWELCC participation. This positive coefficient suggests that larger centres are more likely to receive subsidies, likely due to their capacity to serve more families and their operational scale. Larger centres can achieve economies of scale and often have greater visibility, making them attractive candidates for public funding [@weisbrod1998profit]. However, the smaller effect size of this variable indicates that capacity alone is insufficient to determine subsidy allocation. This finding aligns with [@penn2011quality], who argues that while capacity is an important practical consideration, other factors—such as governance and programmatic alignment—carry more weight in funding decisions. Interpreting these coefficients through odds ratios further clarifies their impact. For instance, the odds ratio for CWELCC participation suggests that centres in the program are several times more likely to receive subsidies compared to non-participating centres, holding other factors constant. Similarly, the odds ratio for non-profit governance reinforces the preferential treatment of non-profits in subsidy allocation policies. These findings align with the broader literature on public funding, which emphasizes the strategic use of subsidies to support centres that meet both operational and policy criteria [@penn2011quality]. The statistical significance of these coefficients underscores their reliability as shown in figure. Variables such as non-profit auspice and CWELCC Participation demonstrated small standard errors and strong significance levels, reinforcing their influence on subsidy allocation. In contrast, variables with less consistent effects, such as certain building types or governance categories in the "other" category, exhibited instability, suggesting that their role in funding decisions may be more context-specific or secondary. The model's findings highlight a strategic approach to subsidy allocation, where funding decisions are guided by alignment with policy goals, operational capacity, and governance structures. 
+The dataset underwent thorough preprocessing to ensure accuracy and reliability, including data cleaning, variable transformation, and a training-test split. Key predictors—operating auspice, CWELCC participation, and total space—were selected based on their relevance, supported by literature. Stepwise selection using AIC removed non-significant variables (ward and building type). Logistic regression assumptions were validated: independence of observations was ensured, linearity of continuous predictors (e.g., total space) was confirmed through residual plots, and multicollinearity was minimized with VIF values below 5. These steps affirm the model's statistical rigor and suitability for the analysis.
+
+The logistic regression model provides insights into key predictors influencing subsidy allocation to licensed child care centres in Toronto, quantifying the impact of governance models, program participation, and operational capacity. The coefficient for non-profit auspice is strongly positive and statistically significant, indicating that non-profit centres are far more likely to receive subsidies compared to commercial or public centres. This aligns with policy priorities favoring organizations with a social mission, which often serve economically vulnerable populations, as noted by Hansmann [@hansmann1980role] and Salamon et al. [@salamon1995partners]. Non-profits’ alignment with public goals of equity and accessibility underscores their prioritization for funding. Participation in the Canada-Wide Early Learning and Child Care (CWELCC) program emerged as the most significant predictor, highlighting the importance of policy alignment. Centres in CWELCC, which comply with national affordability initiatives, are significantly more likely to receive subsidies, as emphasized by Bennett et al. [@bennett2011working] and Kaga et al. [@kaga2010caring]. This aligns with targeted strategies aimed at expanding affordable, high-quality child care access. Total space, representing a centre’s licensed capacity, also positively influences subsidy allocation, although its effect is smaller. Larger centres, capable of serving more families, are attractive candidates for funding due to economies of scale and visibility, as noted by Weisbrod [@weisbrod1998profit]. However, its smaller coefficient indicates that capacity alone does not determine funding, consistent with Penn’s findings that governance and programmatic alignment play a greater role [@penn2011quality]. Odds ratios further underscore the strength of these predictors, with non-profits and CWELCC participants several times more likely to receive subsidies. The statistical significance of these variables, evidenced by small standard errors, reinforces their reliability, while less consistent variables like certain building types exhibited instability, suggesting a secondary role in funding decisions. These findings highlight a strategic approach to subsidy allocation, balancing operational capacity with policy goals and governance structures [@penn2011quality].
 
 The logistic regression model applied in this research proves to be an ideal tool for analyzing subsidy allocation to licensed child care centres in Toronto, particularly due to its capacity to handle binary outcomes effectively. By modeling the log-odds of an event, logistic regression ensures predicted probabilities remain between 0 and 1, aligning seamlessly with the binary nature of the dependent variable—whether a centre receives a subsidy. This feature makes the model both statistically appropriate and easy to interpret. A notable strength of the model lies in its interpretability. Coefficients can be transformed into odds ratios, providing a clear understanding of how predictors influence the likelihood of receiving subsidies. For example, the positive coefficients for non-profit auspice and CWELCC Participation underscore their significant, policy-relevant impact on subsidy distribution. This clarity makes the model particularly valuable for stakeholders and policymakers who require actionable and easily communicated insights. The model's performance metrics further demonstrate its effectiveness. A McFadden's $R^2$ value of 0.454 indicates that the model explains a substantial portion of the variance in subsidy allocation. Additionally, the Area Under the Curve (AUC) of 0.906 highlights the model’s exceptional discriminative ability, confirming its capacity to accurately differentiate between subsidized and non-subsidized centres. The low Root Mean Squared Error (RMSE) further attests to the model’s strong predictive performance. Together, these metrics validate the model's reliability and robustness. Another key advantage of logistic regression is its simplicity compared to more complex approaches such as random forests or decision trees. While those alternatives might offer marginally higher predictive power, they lack the transparency and interpretability required for policy-focused research. Logistic regression strikes a critical balance between accuracy and clarity, making it a practical choice for guiding equitable subsidy allocation strategies. Moreover, the flexibility of logistic regression allows for extensions to explore more intricate relationships. For instance, incorporating interaction terms or temporal data could provide deeper insights while maintaining the model's usability. This adaptability ensures the model remains relevant and applicable as policy environments evolve.
 
-Our model, while effective, has several limitations that warrant consideration. One of the primary limitations is its reliance on the assumption of linearity between predictors and the log-odds of the outcome. Although this assumption is often reasonable, it may oversimplify complex, non-linear relationships that can exist in real-world phenomena such as subsidy allocation. As [@harrell2015regression] notes, failing to capture these non-linear relationships can lead to biased estimates and limit the model’s predictive power. Another limitation is the model’s dependence on correct specification of predictors. Excluding relevant variables or including irrelevant ones in initial variable selection can result in omitted variable bias or overfitting, respectively. Additionally, the model does not inherently account for higher-order interactions unless explicitly included.  For instance, the combined effect of Non-Profit Auspice and CWELCC Participation could provide valuable insights into how policy and governance jointly influence subsidy allocation. [@hosmer2013applied] highlight that logistic regression can oversimplify complex relationships if interaction terms are not considered, potentially leading to incomplete conclusions. Finally, the static nature of the model is another drawback.  Logistic regression provides a snapshot of relationships at a single point in time, failing to capture temporal dynamics or policy changes that can influence subsidy allocation over time. As Singer and [@singer2003applied] suggest, incorporating longitudinal data could provide a more nuanced understanding of how these relationships evolve.
+Our model, while effective, has several limitations that warrant consideration. One of the primary limitations is its reliance on the assumption of linearity between predictors and the log-odds of the outcome. Although this assumption is often reasonable, it may oversimplify complex, non-linear relationships that can exist in real-world phenomena such as subsidy allocation. Failing to capture these non-linear relationships can lead to biased estimates and limit the model’s predictive power [@harrell2015regression]. Another limitation is the model’s dependence on correct specification of predictors. Excluding relevant variables or including irrelevant ones in initial variable selection can result in omitted variable bias or overfitting, respectively. Additionally, the model does not inherently account for higher-order interactions unless explicitly included.  For instance, the combined effect of Non-Profit Auspice and CWELCC Participation could provide valuable insights into how policy and governance jointly influence subsidy allocation. Logistic regression can oversimplify complex relationships if interaction terms are not considered, potentially leading to incomplete conclusions [@hosmer2013applied].  Finally, the static nature of the model is another drawback.  Logistic regression provides a snapshot of relationships at a single point in time, failing to capture temporal dynamics or policy changes that can influence subsidy allocation over time. Incorporating longitudinal data could provide a more nuanced understanding of how these relationships evolve [@singer2003applied].
 
 Future studies could address the limitations of this research by adopting more advanced modeling techniques and incorporating additional data to better capture the complexities of subsidy allocation. Introducing non-linear models or machine learning approaches, such as random forests or gradient boosting, could uncover hidden patterns and interactions between predictors that logistic regression may overlook. Additionally, exploring interaction terms, such as the joint effects of governance models and program participation, could provide more nuanced insights into policy impacts. Longitudinal data would be particularly valuable for understanding how subsidy allocation evolves over time, especially in response to policy changes or shifts in economic conditions. Incorporating time-series or panel data analysis could reveal temporal dynamics and provide a richer understanding of causal relationships. Geographic disparities, noted but not deeply explored in this study, could also be addressed using spatial regression or multilevel models to account for regional clustering and unobserved local factors influencing subsidy distribution. Finally, integrating additional predictors, such as demographic variables, socio-economic indicators, or quality ratings of child care centres, could enhance the explanatory power of future models. These enhancements would provide a more comprehensive view of subsidy allocation and inform strategies to ensure equitable and effective distribution of resources.
 
@@ -562,86 +525,133 @@ vif_values
 
 ### Population
 
-The population includes all licensed child care centres in Toronto as recorded in the publicly available dataset provided by Open Toronto. This population aligns with studies on regulated child care, such as [@morrissey2010childcare], which emphasizes the role of licensing in ensuring quality and safety in early childhood education. However, the dataset excludes unlicensed child care providers, limiting its scope. 
-Represented Groups: Centres adhering to provincial licensing requirements, as emphasized by Cleveland and Krashinsky [@cleveland2003benefits], who note that licensed care is generally associated with higher quality standards.
+The population includes all licensed child care centres in Toronto as recorded in the publicly available dataset provided by Open Toronto. This population aligns with studies on regulated child care that  emphasize the role of licensing in ensuring quality and safety in early childhood education [@morrissey2010childcare]. Licensing sets a minimum standard for safety, staff qualifications, and child-to-provider ratios, thereby offering a benchmark for regulated care. However, this dataset inherently excludes unlicensed child care providers, which limits the representativeness of the broader child care system. Unlicensed providers often cater to lower-income families or those in rural and underserved urban areas [@cleveland2003benefits]. These providers may offer affordable or flexible care arrangements but are not bound by the same quality standards, making them a critical but underrepresented part of the child care ecosystem.
 
-Excluded Groups: Informal and unlicensed providers, which disproportionately to lower-income families and those in rural or underserved urban areas.
+- Represented Groups: The dataset focuses on licensed centres that adhere to provincial regulatory requirements, ensuring they meet established standards for infrastructure, safety, and staff qualifications. These facilities are more likely to participate in government subsidy programs and policy initiatives, aligning with Cleveland and Krashinsky's findings that licensed child care is generally associated with higher quality standards [@cleveland2003benefits].
+
+- Excluded Groups: The dataset excludes informal and unlicensed providers, which disproportionately serve families with lower socioeconomic status or those living in areas with limited access to licensed centres. This exclusion highlights a systemic gap, as research shows that unlicensed care often fills critical needs for flexibility and affordability, especially for families in marginalized communities [@fuller1996family].
 
 ### Frame
 
 The dataset represents a comprehensive census of licensed child care centres, reflecting administrative records compiled by the city. 
 
-Strengths: Comprehensive coverage reduces selection bias and enhances geographic representativeness.
+- Strengths: The census-like nature of the dataset significantly reduces selection bias, as it captures all licensed child care centres within Toronto’s boundaries. The inclusion of geographic coordinates allows for advanced spatial analysis, making it possible to study access and equity in child care distribution. This level of coverage enhances the dataset's utility for policy analysis and urban planning.
 
-Limitations: Static data may fail to capture temporal variations or operational changes, a common limitation noted in administrative datasets.
+- Limitations: While comprehensive, the dataset is static and does not capture temporal changes, such as new centres opening, existing ones closing, or changes in capacity. As highlighted in the literature, administrative datasets often fail to account for dynamic operational changes, limiting their applicability for longitudinal analysis [@tekin2007childcare]. Furthermore, the exclusion of qualitative attributes, such as user satisfaction or service quality, reduces the dataset's ability to capture nuanced aspects of child care provision.
 
 ### Sample
 
-The dataset uses census sampling of licensed child care centres, ensuring inclusion of all facilities within the licensing framework.
+The dataset employs census sampling, meaning all licensed child care centres are included. This approach ensures that the sample is representative of the licensed child care sector in Toronto, eliminating sampling error associated with random or stratified sampling methods.
 
-Advantages: Census data minimizes sampling error and provides a reliable basis for spatial and capacity analysis.
+- Strengths: By using a census approach, the dataset minimizes sampling error and provides a reliable foundation for spatial and capacity-related analyses. Census data allows for a holistic view of the licensed child care system, capturing the full scope of regulated providers within the city.
 
-Drawbacks: Lack of informal care data may lead to underrepresentation of actual child care resources, echoing findings by [@tekin2007childcare] that informal care plays a critical role in many families’ child care arrangements.
+- Limitations: The reliance on census data excludes informal care arrangements, which are often a vital resource for families who face financial or logistical barriers to accessing licensed centers. Tekin emphasizes that informal care plays a critical role in many families' child care decisions, and its absence may lead to an underestimation of the actual child care resources available in Toronto [@tekin2007childcare].
 
 ## Data Collection Methodology
 
 ### Observational Data Compilation
 
-The dataset is derived from municipal administrative records, which are considered reliable for policy analysis [@cleveland2003benefits]. Licensing authorities collect this data as part of routine compliance monitoring, ensuring high accuracy.
+The dataset originates from administrative records maintained by the licensing authorities of the City of Toronto. These records are generated as part of routine compliance monitoring, ensuring a high degree of accuracy and reliability. Administrative data is widely regarded as a robust source for policy and program evaluation [@cleveland2003benefits]. Such data typically includes detailed information about center capacity, governance models, and geographic location, making it suitable for quantitative analysis.
 
-Strengths: Administrative data is less prone to recall bias compared to survey data.
+- Strengths: Administrative data offers several advantages, including its high accuracy, as it is subject to rigorous regulatory oversight. Unlike survey data, it is less prone to recall bias and provides a standardized framework for comparing centres across various dimensions, such as capacity, location, and subsidy participation.
 
-Weaknesses: Lack of qualitative insights into service quality or user satisfaction.
+- Limitations: However, the dataset lacks qualitative insights, such as parental satisfaction or staff perceptions, which are crucial for understanding the broader impact of child care services. This limitation underscores the need for supplementary data sources, such as surveys or focus groups, to provide a more comprehensive view.
 
 ### Non-response Handling
 
-While the dataset does not involve survey non-response, its exclusion of unlicensed providers creates a systematic gap. Research by Fuller et al. [@fuller1996family] shows that informal care often fills critical voids in underserved areas, and its exclusion may understate the full scope of child care provision.
+While the dataset does not involve survey non-response, its exclusion of unlicensed providers creates a systematic gap. Research shows that informal care often fills critical voids in underserved areas, and its exclusion may understate the full scope of child care provision [@fuller1996family].
 
 ## Sampling Approach and Trade-offs
 
 ### Strengths
 
-Comprehensive Coverage: Census sampling ensures no licensed centres are omitted.
-Geospatial Precision: Geographic coordinates support advanced spatial analysis, aligning with studies like [@larsen2015accessibility] on urban accessibility.
+- Comprehensive Coverage: Census sampling ensures that no licensed centers are omitted, providing a complete overview of the licensed child care landscape.
 
-High Validity: Licensing records provide robust validity, as they are subject to regulatory verification [@cleveland2003benefits].
+- Geospatial Precision: The inclusion of geographic coordinates facilitates spatial analyses, such as proximity studies and accessibility evaluations, aligning with methodologies used in urban planning research [@larsen2015accessibility].
+
+- High Validity: Licensing records are validated through routine inspections and compliance monitoring, ensuring the reliability of the dataset [@cleveland2003benefits].
 
 ### Limitations
 
-Exclusion of Informal Care: Research by Morrissey [@morrissey2010childcare] highlights that informal care is often preferred for flexibility or affordability, making its exclusion a significant limitation.
-Static Nature: The lack of longitudinal data limits the ability to analyze trends.
-Regulatory Bias: Centers excluded due to non-compliance may disproportionately represent marginalized communities.
+- Exclusion of Informal Care: Informal care arrangements, often preferred for their affordability and flexibility, are absent from the dataset. This exclusion limits the dataset's applicability for studying the full scope of child care options available to families [@morrissey2010childcare].
+
+- Static Nature: The dataset represents a snapshot in time, limiting its utility for analyzing trends or changes in the child care sector over time.
+
+- Regulatory Bias: Centers excluded due to non-compliance with licensing standards may disproportionately represent marginalized communities, skewing the dataset’s representativeness.
 
 ## Observational Bias and Measurement Challenges
 
 ### Observational Bias
 
-Biases inherent in observational datasets include selection bias (due to licensing criteria) and survivorship bias (exclusion of closed centres). 
+Selection bias is inherent in observational datasets, as the inclusion criteria (i.e., licensing) inherently exclude certain providers. Additionally, survivorship bias may arise from the exclusion of centres that have closed, potentially skewing the analysis toward larger, more established providers.
 
 ### Measurement Challenges
 
-Geographic Aggregation: Aggregating data to broader areas can obscure micro-level disparities.
-Capacity Limitations: Reported capacities may not reflect actual utilization or unmet demand, as noted by [@blau2006preschool].
+- Geographic Aggregation: Aggregating data to broader geographic units, such as wards or neighborhoods, can obscure micro-level disparities in access or service quality.
+
+- Capacity Limitations: Reported capacities may not accurately reflect actual utilization or unmet demand. Blau notes that capacity data often fails to account for operational constraints, such as staffing shortages or seasonal fluctuations [@blau2006preschool].
 
 ## Methodological Enhancements and Recommendations
 
 ### Enhancements
 
-Incorporating Temporal Data: Adding longitudinal data could enable trend analysis, echoing the approach of [@fuller1996family].
+- Incorporating Temporal Data: Adding longitudinal data would enable the analysis of trends, such as changes in capacity or subsidy participation [@fuller1996family].
 
-Integration with Demographics: Linking with census data would allow for equity analysis, consistent with the methodology used by [@larsen2015accessibility].
+- Integration with Demographics: Linking the dataset with census data would allow for equity-focused analyses, such as the relationship between socioeconomic status and access to licensed care [@larsen2015accessibility].
 
 ### Recommendations
 
-Addressing Informal Care: Future studies should integrate data from community surveys to include informal providers, as suggested by [@morrissey2010childcare].
+- Addressing Informal Care: Future studies should integrate data from community surveys or focus groups to capture informal care arrangements [@morrissey2010childcare].
 
-Dynamic Updates: Regular updates to administrative records would enhance relevance, a recommendation supported.
+- Dynamic Updates: Regular updates to administrative records would enhance the dataset’s relevance and applicability, addressing limitations related to its static nature.
 
-Geospatial Enhancements: Including data on transit access or neighborhood socioeconomic conditions could enrich spatial analyses, aligning with findings by [@tekin2007childcare]
+- Geospatial Enhancements: Including data on public transit access or neighborhood-level socioeconomic indicators could provide a richer context for spatial analyses, aligning with Tekin’s findings on urban accessibility and equity [@tekin2007childcare].
+
+# R packages {#sec-R-package} 
+
+The following are packages used for this study:
+
+- `opendatatoronto`[@citeopendatatoronto]: Used to access and retrieve the Licensed Child Care Centres dataset directly from the City of Toronto's open data portal.
+
+- `arrow` [@citearrow]: Provided efficient tools for reading and writing Parquet files, enabling fast and memory-efficient handling of large datasets during analysis.
+
+- `here` [@citehere]: Simplified file referencing by creating relative paths, ensuring reproducibility and consistency in accessing datasets, scripts, and outputs across different working environments.
+
+- `readr` [@citereadr]: Simplified the import and parsing of raw data into R.
+
+- `tidyverse` [@citetidyverse]: Streamlined data manipulation, cleaning, and visualization processes.
+
+- `dplyr` [@citedplyr]: Provided tools for filtering, transforming, and summarizing the dataset effectively.
+
+- `tidyr` [@citetidyr]: Enabled data tidying processes such as reshaping, separating, or combining, and handling missing values to structure the dataset into a clean and analyzable format.
+
+- `ggplot2` [@citeggplot2]: Created powerful and flexible visualizations tailored to the analysis needs.
+
+- `ggcorrplot` [@citeggcorrplot]: Simplified the visualization of correlation matrices with customizable heatmaps, including options for labeling and styling to enhance interpretability and presentation.
+
+- `glmnet` [@citeglmnet]: Applied for fitting regularized regression models and feature selection.
+
+- `modelsummary` [@citemodelsummary]: Streamlined the creation of comprehensive and customizable summary tables for regression models, including key statistics such as AIC, BIC, and coefficient estimates, to facilitate clear model comparisons and reporting.
+
+- `stats` [@citestats]: Provided core statistical functions to fit models, perform hypothesis testing, and calculate measures such as p-values, log-likelihoods, and AIC for model evaluation.
+
+- `car` [@citecar]: Used for diagnostic tools, including Variance Inflation Factor (VIF) tests, to assess multicollinearity.
+
+- `caret` [@citecaret]: Enabled the development, validation, and evaluation of machine learning models, including training-test splits and performance metrics.
+
+- `pROC` [@citepROC]: Facilitated the computation and visualization of Receiver Operating Characteristic (ROC) curves and Area Under the Curve (AUC) metrics, enabling robust evaluation of the model's classification performance.
+
+- `stargazer` [@citestagazer]: Generated formatted regression tables for outputs.
+
+- `broom` [@citebroom]: Simplified the process of converting model outputs into tidy data frames, enabling seamless integration of statistical results with visualization and reporting workflows.
+
+- `kableExtra` [@citekableExtra]:Enhanced the presentation of tables by adding advanced formatting options, including captions, headers, and styling, for polished and professional reporting.
+
+- `gt` [@citegt]: Enabled the creation of aesthetically pleasing and highly customizable tables for presenting data and model summaries in a clean and professional format.
+
+- `knitr` [@citeknitr]: Dynamically integrated code, results, and plots into the final document for seamless reporting.
+
 
 \newpage
 
-
 # References
-
-
